@@ -1,0 +1,172 @@
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+
+const AdvancedFilterScreen = ({ navigation }) => {
+  const [selectedFacilities, setSelectedFacilities] = useState({
+    kitchen: false,
+    pool: false,
+    gym: false,
+    outdoorSpace: false,
+    internetAccess: false,
+  });
+
+  const toggleFacility = (facility) => {
+    setSelectedFacilities((prev) => ({
+      ...prev,
+      [facility]: !prev[facility],
+    }));
+  };
+
+  const clearAllFacilities = () => {
+    setSelectedFacilities({
+      kitchen: false,
+      pool: false,
+      gym: false,
+      outdoorSpace: false,
+      internetAccess: false,
+    });
+  };
+
+  return (
+    <View style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <FontAwesome name="arrow-left" size={20} color="gray" />
+        </TouchableOpacity>
+        <Text style={styles.title}>Filters Advanced </Text>
+        <View style={{ width: 20 }} />
+      </View>
+
+      {/* Content */}
+      <ScrollView contentContainerStyle={styles.content}>
+        <Text style={styles.sectionTitle}>Rooms and beds</Text>
+        <TouchableOpacity style={styles.filterOption}>
+          <Text style={styles.filterText}>Bedrooms</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.filterOption}>
+          <Text style={styles.filterText}>Beds</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.filterOption}>
+          <Text style={styles.filterText}>Bathrooms</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.sectionTitle}>Facilities</Text>
+        {Object.keys(selectedFacilities).map((facility) => (
+          <TouchableOpacity
+            key={facility}
+            style={styles.filterOption}
+            onPress={() => toggleFacility(facility)}
+          >
+            <Text style={styles.filterText}>
+              {facility.charAt(0).toUpperCase() + facility.slice(1)}
+            </Text>
+            <FontAwesome
+              name={selectedFacilities[facility] ? 'check-square' : 'square-o'}
+              size={20}
+              color="gray"
+            />
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+
+      {/* Footer */}
+      <View style={styles.footer}>
+        <TouchableOpacity onPress={clearAllFacilities}>
+          <Text style={styles.clearButton}>Clear all</Text>
+        </TouchableOpacity>
+   <TouchableOpacity
+  style={styles.applyButton}
+  onPress={() => {
+    navigation.navigate('ListingDetail', {
+      filters: selectedFacilities,  
+    });
+  }}
+>
+  <Text style={styles.applyText}>View Results</Text>
+</TouchableOpacity>
+
+      </View>
+    </View>
+  );
+};
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 16, 
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  title: {
+    fontSize: 18, 
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  content: {
+    flex: 1,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    marginTop: 10,
+  },
+  sectionTitle: {
+    fontSize: 16, 
+    fontWeight: 'bold',
+    color: '#555',
+    marginBottom: 8,
+  },
+  filterOption: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 12, 
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  filterText: {
+    fontSize: 16, 
+    color: '#333',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 25,
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+    backgroundColor: '#fff',
+  },
+  clearButton: {
+    fontSize: 16, 
+    color: '#888',
+  },
+  applyButton: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 12, 
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  applyText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
+
+export default AdvancedFilterScreen;
